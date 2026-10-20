@@ -1,0 +1,6 @@
+order_id,customer_id,quantity,unit_price
+3001,C301,2,150.50
+3002,C302,0,100
+3003,,3,50
+3004,C304,five,80
+3005,C305,-1,25

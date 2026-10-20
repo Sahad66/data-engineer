@@ -1,0 +1,14 @@
+[
+  {
+    "order_id": 4001,
+    "customer_id": "C401",
+    "quantity": 2,
+    "unit_price": 150.50
+  },
+  {
+    "order_id": 4002,
+    "customer_id": "C402",
+    "quantity": 1,
+    "unit_price": 300.00
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "order_id": 5001,
+  "customer": {
+    "customer_id": "C501",
+    "city": "Dhaka"
+  },
+  "items": [
+    {"product": "Keyboard", "quantity": 2},
+    {"product": "Mouse", "quantity": 1}
+  ]
+}

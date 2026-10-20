@@ -1,0 +1,5 @@
+order_id,customer_id,quantity,unit_price,quality_issues
+3002,C302,0,100,invalid_quantity
+3003,,3,50,missing_customer_id
+3004,C304,five,80,invalid_numeric_value
+3005,C305,-1,25,invalid_quantity

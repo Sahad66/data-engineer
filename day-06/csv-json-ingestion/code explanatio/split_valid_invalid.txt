@@ -1,0 +1,253 @@
+## ১. এই কোডটি কী কাজ করে?
+
+এই কোডটি `orders_messy.csv` ফাইলের অর্ডারগুলো যাচাই করে দুইটি আলাদা CSV ফাইলে রাখে।
+
+- `orders_valid.csv` → যেসব অর্ডারে সমস্যা নেই।
+- `orders_rejected.csv` → যেসব অর্ডারে সমস্যা আছে এবং সমস্যার কারণ।
+
+## ২. Step-by-step ব্যাখ্যা
+
+### Step 1: প্রয়োজনীয় লাইব্রেরি Import করা
+
+python
+```
+import csv
+from pathlib import Path
+from decimal import Decimal, InvalidOperation
+```
+
+- `csv` → CSV ফাইল পড়া ও লেখার জন্য।
+- `Path` → ফাইলের লোকেশন নির্ধারণের জন্য।
+- `Decimal` → Unit Price-এর মান যাচাই করার জন্য।
+- `InvalidOperation` → ভুল Decimal মানের কারণে তৈরি হওয়া Error ধরার জন্য।
+
+### Step 2: তিনটি ফাইলের লোকেশন তৈরি করা
+
+python
+```
+BASE = Path(__file__).resolve().parent.parent
+SOURCE = BASE / "data" / "orders_messy.csv"
+VALID = BASE / "data" / "orders_valid.csv"
+REJECTED = BASE / "data" / "orders_rejected.csv"
+```
+
+- `BASE` → প্রজেক্টের মূল ফোল্ডারের লোকেশন বের করে।
+- `SOURCE` → যেখান থেকে অর্ডারের ডেটা পড়বে।
+- `VALID` → সঠিক ডেটা যে ফাইলে রাখবে।
+- `REJECTED` → ভুল ডেটা যে ফাইলে রাখবে।
+
+অর্থাৎ, একটি ফাইল থেকে ডেটা নিয়ে দুইটি ফাইলে ভাগ করা হবে।
+
+### Step 3: `validate()` Function তৈরি করা
+
+python
+```
+def validate(row):
+    issues = []
+```
+
+`validate()` একটি Function, যা একটি অর্ডারের Row পরীক্ষা করে।
+
+- `row` → যে অর্ডারটি পরীক্ষা করা হবে।
+- `issues = []` → অর্ডারে পাওয়া সমস্যাগুলো জমা রাখবে।
+
+### Step 4: Customer ID পরীক্ষা করা
+
+python
+```
+if not (row.get("customer_id") or "").strip():
+    issues.append("missing_customer_id")
+```
+
+Customer ID খালি কি না পরীক্ষা করে।
+
+যদি Customer ID না থাকে বা শুধু Space থাকে, তাহলে `issues` তালিকায় `"missing_customer_id"` যোগ হবে।
+
+### Step 5: Order ID, Quantity ও Price পরীক্ষা করা
+
+python
+```
+try:
+    if int(row["order_id"]) <= 0:
+        issues.append("invalid_order_id")
+
+    if int(row["quantity"]) <= 0:
+        issues.append("invalid_quantity")
+
+    price = Decimal(row["unit_price"])
+    if not price.is_finite() or price < 0:
+        issues.append("invalid_unit_price")
+```
+
+এখানে তিনটি বিষয় পরীক্ষা করা হয়।
+
+- Order ID: `0`-এর চেয়ে বড় হতে হবে।
+- Quantity: `0`-এর চেয়ে বড় হতে হবে।
+- Unit Price: সসীম সংখ্যা হতে হবে এবং ঋণাত্মক হওয়া যাবে না।
+
+যে শর্ত পূরণ হবে না, তার সমস্যার নাম `issues` তালিকায় যোগ হবে।
+
+### Step 6: Error সামলানো এবং ফলাফল ফেরত দেওয়া
+
+python
+```
+except (ValueError, TypeError, KeyError, InvalidOperation):
+    issues.append("invalid_numeric_value")
+
+return issues
+```
+
+- `except` → সংখ্যার মান ভুল হলে বা প্রয়োজনীয় Key না থাকলে Error ধরে।
+- `issues.append(...)` → `"invalid_numeric_value"` যোগ করে।
+- `return issues` → পাওয়া সমস্যাগুলোর তালিকা ফেরত দেয়।
+
+সমস্যা না থাকলে খালি তালিকা `[]` ফেরত আসবে।
+
+### Step 7: Source CSV ফাইল পড়া
+
+python
+```
+with open(SOURCE, "r", newline="", encoding="utf-8-sig") as file:
+    reader = csv.DictReader(file)
+    fields = (reader.fieldnames or []) + ["quality_issues"]
+```
+
+- `SOURCE` ফাইলটি পড়ার জন্য খোলা হয়।
+- `DictReader` প্রতিটি Row-কে Dictionary হিসেবে পড়ে।
+- `reader.fieldnames` → CSV-এর Column-এর নামগুলো দেয়।
+- `quality_issues` → নতুন একটি Column যোগ করা হয়, যেখানে সমস্যার কারণ লেখা থাকবে।
+
+যেমন, নতুন Column-সহ Header হতে পারে:
+
+text
+```
+order_id,customer_id,quantity,unit_price,quality_issues
+```
+
+### Step 8: Header আছে কি না পরীক্ষা করা
+
+python
+```
+if not reader.fieldnames:
+    raise ValueError("Source CSV has no header")
+```
+
+Source CSV ফাইলে Header না থাকলে Error দেখিয়ে প্রোগ্রাম বন্ধ হবে।
+
+### Step 9: সঠিক ও ভুল Row আলাদা করা
+
+python
+```
+valid_rows = []
+rejected_rows = []
+
+for row in reader:
+    issues = validate(row)
+```
+
+- `valid_rows` → সঠিক Row রাখবে।
+- `rejected_rows` → ভুল Row রাখবে।
+- `for row in reader` → প্রতিটি অর্ডার একে একে পড়বে।
+- `validate(row)` → অর্ডারটি যাচাই করে সমস্যার তালিকা দেবে।
+
+এরপর:
+
+python
+```
+if issues:
+    rejected_rows.append({
+        **row,
+        "quality_issues": ";".join(issues)
+    })
+else:
+    valid_rows.append({
+        **row,
+        "quality_issues": ""
+    })
+```
+
+- `if issues:` → সমস্যা থাকলে Row-টি `rejected_rows`-এ যাবে।
+- `else:` → সমস্যা না থাকলে `valid_rows`-এ যাবে।
+- `**row` → আগের Row-এর সব ডেটা নতুন Dictionary-তে কপি করে।
+- `";".join(issues)` → একাধিক সমস্যার নাম সেমিকোলন দিয়ে একসঙ্গে লেখে।
+- `"quality_issues": ""` → সঠিক Row-এর জন্য সমস্যার ঘর খালি রাখে।
+
+উদাহরণ:
+
+text
+```
+quality_issues = invalid_quantity;invalid_unit_price
+```
+
+### Step 10: দুইটি CSV ফাইলে ডেটা লেখা
+
+python
+```
+for path, rows in [(VALID, valid_rows), (REJECTED, rejected_rows)]:
+    with open(path, "w", newline="", encoding="utf-8") as file:
+        writer = csv.DictWriter(file, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(rows)
+```
+
+এই Loop দুইবার চলবে।
+
+প্রথমবার:
+
+- `VALID` ফাইলে `valid_rows` লিখবে।
+
+দ্বিতীয়বার:
+
+- `REJECTED` ফাইলে `rejected_rows` লিখবে।
+
+এখানে:
+
+- `"w"` → ফাইল লেখার জন্য খোলে; একই নামে ফাইল থাকলে তার আগের কনটেন্ট মুছে নতুন করে লেখে।
+- `DictWriter` → Dictionary-এর ডেটা CSV ফরম্যাটে লেখে।
+- `writeheader()` → Column-এর নাম লেখে।
+- `writerows(rows)` → সব Row লেখে।
+
+### Step 11: শেষের রিপোর্ট দেখানো
+
+python
+```
+print("Valid rows:", len(valid_rows))
+print("Rejected rows:", len(rejected_rows))
+print("Valid file:", VALID.name)
+print("Rejected file:", REJECTED.name)
+```
+
+- `len(valid_rows)` → মোট কতটি সঠিক Row আছে।
+- `len(rejected_rows)` → মোট কতটি ভুল Row আছে।
+- `VALID.name` → সঠিক ডেটার ফাইলের নাম দেখায়।
+- `REJECTED.name` → ভুল ডেটার ফাইলের নাম দেখায়।
+
+উদাহরণ Output:
+
+text
+```
+Valid rows: 8
+Rejected rows: 2
+Valid file: orders_valid.csv
+Rejected file: orders_rejected.csv
+```
+
+## ৩. পুরো কোডের কাজ এক নজরে
+
+orders\_messy.csv
+
+মূল ডেটা
+
+validate(row)
+
+প্রতিটি অর্ডার যাচাই করে
+
+Valid Rows
+
+orders\_valid.csv
+
+Rejected Rows
+
+orders\_rejected.csv
+
+মনে রাখবে: আগের কোডটি শুধু ডেটা যাচাই করে PASS/FAIL দেখাত। এই কোডটি আরও এক ধাপ এগিয়ে সঠিক ও ভুল ডেটা আলাদা ফাইলে সংরক্ষণ করে এবং ভুলের কারণও লিখে রাখে।
