@@ -1,0 +1,9 @@
+order_id,customer_id,order_date,product,quantity,unit_price,status
+1001,C101,2026-10-01,Keyboard,2,1500,Completed
+1002,C102,2026-10-01,Mouse,3,500,Completed
+1003,C103,2026-10-02,Monitor,1,12000,Pending
+1004,C104,2026-10-02,Headphone,2,1800,Completed
+1005,C105,2026-10-03,Keyboard,1,1500,Cancelled
+1006,C106,2026-10-03,Mouse,0,500,Completed
+1007,,2026-10-04,Monitor,1,12000,Pending
+1004,C104,2026-10-02,Headphone,2,1800,Completed

@@ -1,0 +1,11 @@
+﻿sale_id,sale_date,product,category,quantity,unit_price,city
+1,2026-10-01,Mouse,Accessories,2,500,Dhaka
+2,2026-10-01,Keyboard,Accessories,1,1200,Chattogram
+3,2026-10-02,Earbuds,Audio,2,1500,Dhaka
+4,2026-10-02,Smartwatch,Wearable,1,3000,Sylhet
+5,2026-10-03,Charger,Accessories,3,400,Dhaka
+6,2026-10-03,Headphones,Audio,1,2200,Khulna
+7,2026-10-04,Mouse,Accessories,1,500,Rajshahi
+8,2026-10-04,Earbuds,Audio,1,1500,Dhaka
+9,2026-10-05,Smartwatch,Wearable,2,3000,Chattogram
+10,2026-10-05,Charger,Accessories,2,400,Sylhet

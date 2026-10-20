@@ -1,0 +1,6 @@
+﻿order_id,customer_id,quantity,unit_price,status
+1001,C101,2,150,Delivered
+1002,,0,-50,Unknown
+1003,C103,five,abc,Pending
+1004,C104,3,200,Shipped
+1005,C105,-1,100,Delivered
