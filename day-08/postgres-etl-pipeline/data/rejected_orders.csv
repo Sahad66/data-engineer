@@ -1,0 +1,4 @@
+order_id,customer_id,quantity,unit_price,rejection_reason
+1005,,1,100,Missing customer_id
+1006,C106,0,200,Invalid quantity
+1007,C107,2,-50,Invalid unit_price

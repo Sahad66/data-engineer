@@ -1,0 +1,4 @@
+input_rows,clean_rows,rejected_rows,status,message
+7,4,3,SUCCESS,Extract and transform completed
+0,0,0,FAILURE,Source file missing: E:\study\data enginner\data-engineer-roadmap\day-07\ecommerce-etl-pipeline\data\orders.csv
+7,4,3,SUCCESS,Extract and transform completed
