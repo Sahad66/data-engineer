@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS posts (
+    post_id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL,
+    loaded_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);   
