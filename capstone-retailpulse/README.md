@@ -1,4 +1,4 @@
-# RetailPulse — E-commerce Data Engineering Platform
+﻿# RetailPulse - E-commerce Data Engineering Platform
 
 ## Overview
 
@@ -165,3 +165,4 @@ Potential extensions include:
 ## Repository
 
 GitHub: https://github.com/Sahad66/data-engineer.git
+
