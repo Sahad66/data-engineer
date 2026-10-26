@@ -1,0 +1,11 @@
+payment_id,order_id,payment_method,payment_status,amount
+PAY001,O1001,card,paid,1200.0
+PAY002,O1002,mobile_banking,paid,360.0
+PAY003,O1003,card,paid,1300.0
+PAY004,O1004,cash,pending,950.0
+PAY005,O1005,mobile_banking,paid,700.0
+PAY006,O1006,card,paid,1200.0
+PAY007,O1007,cash,paid,1900.0
+PAY008,O1008,mobile_banking,failed,480.0
+PAY009,O1009,card,paid,650.0
+PAY010,O1010,cash,paid,1050.0

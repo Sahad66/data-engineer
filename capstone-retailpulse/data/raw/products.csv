@@ -1,0 +1,6 @@
+product_id,product_name,category,unit_price
+P001,Keyboard,Electronics,1200.0
+P002,Mouse,Electronics,650.0
+P003,Notebook,Stationery,120.0
+P004,Backpack,Accessories,950.0
+P005,Water Bottle,Accessories,350.0
