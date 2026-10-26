@@ -1,50 +1,99 @@
-
-# RetailPulse — E-commerce Data Platform
+# RetailPulse — E-commerce Data Engineering Platform
 
 ## Overview
 
-RetailPulse is an end-to-end data engineering portfolio project
-designed to ingest, validate, transform, and model e-commerce
-data for reliable business analytics.
+RetailPulse is an end-to-end data engineering portfolio project built to demonstrate reliable e-commerce data ingestion, validation, PostgreSQL-based data processing, incremental loading, data quality checks, audit logging, and pipeline recovery.
 
-## Planned Technology Stack
+The project uses synthetic e-commerce data to demonstrate practical data engineering workflows.
+
+## Technology Stack
 
 - Python
 - PostgreSQL
 - SQL
-- dbt
-- Apache Airflow
-- Docker
 - pytest
-- GitHub Actions
-
-## Planned Pipeline
-
-Source Data → Ingestion → Validation → PostgreSQL
-→ Data Warehouse Models → Automated Tests → Analytics
-
-## Project Status
-
-Phase 1: Foundation and source data setup.
-
-## Data and Results
-
-Dataset documentation, validation results, architecture,
-and project outcomes will be added as the project develops.
+- PowerShell
+- Git and GitHub
 
 
+Additional technologies such as dbt, Apache Airflow, Docker, and GitHub Actions may be considered for future extensions if they are not yet implemented.
+
+## Pipeline Architecture
+
+```text
+Synthetic E-commerce Data
+          |
+          v
+     Data Ingestion
+          |
+          v
+   Data Validation
+          |
+          v
+ PostgreSQL Source/Target
+          |
+          v
+ Incremental Load + Watermark
+          |
+          v
+ Data Quality Validation
+          |
+          v
+ Audit Logging and Monitoring
+          |
+          v
+ Tests, Recovery, and Automation
+```
+
+## Implemented Capabilities
+
+- Synthetic e-commerce source data generation
+- Data validation and quality checks
+- PostgreSQL integration
+- Incremental data loading
+- Watermark/checkpoint tracking
+- Duplicate prevention and upsert handling
+- Audit run tracking
+- Failure simulation and recovery verification
+- SQL monitoring queries and operational runbook
+- PowerShell pipeline runner
+- Windows Task Scheduler setup and manual execution test
+- Automated tests using pytest
+- Git ignore rules for local secrets and generated files
+
+## Testing
+
+Run the automated test suite from the project root:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+The latest reported test result:
+
+```text
+5 passed
+```
+
+Run the tests again after making changes to confirm the current result.
 
 ## Local Setup
 
 ### Requirements
-- Python 3.12 or another compatible Python version
+
+- Python
+- PostgreSQL
 - Git
+- Windows PowerShell (for the provided Windows automation scripts)
 
 ### 1. Clone the repository
 
-Clone the repository and navigate to the `capstone-retailpulse` directory.
+```powershell
+git clone https://github.com/Sahad66/data-engineer.git
+cd data-engineer\capstone-retailpulse
+```
 
-### 2. Create and activate a virtual environment (Windows PowerShell)
+### 2. Create and activate a virtual environment
 
 ```powershell
 python -m venv .venv
@@ -53,40 +102,66 @@ python -m venv .venv
 
 ### 3. Install dependencies
 
-For normal installation:
-
 ```powershell
 python -m pip install -r requirements.txt
 ```
 
-To install the exact versions captured in the lock file:
+If you need the exact versions recorded in the lock file:
 
 ```powershell
 python -m pip install -r requirements-lock.txt
 ```
 
-### 4. Generate the synthetic source data
+### 4. Configure local environment
+
+Review `.env.example` and create a local `.env` file if the project scripts require environment variables. Keep credentials and passwords out of Git.
+
+### 5. Generate synthetic source data
 
 ```powershell
 python .\src\retailpulse\generate_data.py
 ```
 
-### 5. Run data quality validation
+### 6. Run data validation
 
 ```powershell
 python .\src\retailpulse\validate_data.py
 ```
 
-The validation script should report all checks as passed.
+Follow the validation output to confirm whether the checks pass.
 
-### Data Storage
+### 7. Run automated tests
 
-Generated CSV files are stored in `data/raw/`.
-Virtual environments, logs, and environment secrets should not be committed.
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+```
 
-### Current Project Status
+Refer to the pipeline scripts and SQL files for the exact PostgreSQL setup and incremental execution commands.
 
-- Synthetic source data generation: completed
-- Automated data quality validation: completed
-- Data dictionary: completed
-- PostgreSQL warehouse and ETL pipeline: planned next
+## Security
+
+- Local `.env` files should not be committed.
+- PostgreSQL credentials should be stored outside source code.
+- Use `.env.example` to document required variable names without real secrets.
+- Review `git status` before committing changes.
+
+## Current Status
+
+The project includes incremental pipeline functionality, audit tracking, data quality validation, recovery testing, operational SQL, Windows automation, and automated tests.
+
+The latest test run completed successfully with **5 passed**.
+
+## Future Improvements
+
+Potential extensions include:
+
+- dbt-based warehouse transformations
+- Apache Airflow orchestration
+- Docker-based environment setup
+- GitHub Actions continuous integration
+- Business KPI dashboard
+- Additional integration and data reconciliation tests
+
+## Repository
+
+GitHub: https://github.com/Sahad66/data-engineer.git
