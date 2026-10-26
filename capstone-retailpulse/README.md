@@ -103,7 +103,7 @@ python -m venv .venv
 ### 3. Install dependencies
 
 ```powershell
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-lock.txt
 ```
 
 If you need the exact versions recorded in the lock file:
@@ -165,4 +165,5 @@ Potential extensions include:
 ## Repository
 
 GitHub: https://github.com/Sahad66/data-engineer.git
+
 
